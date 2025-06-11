@@ -37,7 +37,7 @@ A real-time face tracking system that uses computer vision to control a servo mo
 ### 1. Clone Repository
 ```bash
 git clone https://github.com/mighty-baseplate/Face-tracking.git
-cd Face-Tracking
+cd Face-tracking
 ```
 
 ### 2. Install Python Dependencies
@@ -152,9 +152,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Support
 
-- **Issues:** [GitHub Issues](https://github.com/YOUR_USERNAME/face-tracking-servo/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/YOUR_USERNAME/face-tracking-servo/discussions)
-- **Email:** your.email@example.com
+- **Issues:** [GitHub Issues](https://github.com/mighty-baseplate/Face-tracking/issues)
+- **Email:** mightybaseplate.games@gmail.com
 
 ## ⭐ Star History
 
@@ -163,6 +162,3 @@ If this project helped you, please give it a star! ⭐
 ---
 
 **Made with ❤️ for makers and robotics enthusiasts**
-
-[![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/face-tracking-servo.svg?style=social&label=Star)](https://github.com/YOUR_USERNAME/face-tracking-servo)
-[![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/face-tracking-servo.svg?style=social&label=Fork)](https://github.com/YOUR_USERNAME/face-tracking-servo/fork)

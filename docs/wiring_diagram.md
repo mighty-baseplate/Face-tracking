@@ -22,29 +22,6 @@
 
 ---
 
-## Visual Wiring Diagram
-
-
-Arduino Uno                    SG90 Servo Motor
-┌─────────────┐               ┌──────────────┐
-│             │               │              │
-│         Pin9├───────────────┤Signal(Orange)│
-│             │               │              │
-│          5V ├───────────────┤Power  (Red)  │
-│             │               │              │
-│         GND ├───────────────┤Ground (Brown)│
-│             │               │              │
-│        USB  │               └──────────────┘
-└─────────────┘
-     │
-     │ USB Cable
-     │
-┌────▼────┐
-│Computer │
-└─────────┘
-
----
-
 ## Breadboard Connection (Optional)
 
 | Arduino Pin | Breadboard Rail | Servo Wire       |
