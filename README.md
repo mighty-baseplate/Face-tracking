@@ -36,8 +36,8 @@ A real-time face tracking system that uses computer vision to control a servo mo
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/face-tracking-servo.git
-cd face-tracking-servo
+git clone https://github.com/mighty-baseplate/Face-tracking.git
+cd Face-Tracking
 ```
 
 ### 2. Install Python Dependencies
