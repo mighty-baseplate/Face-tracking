@@ -29,8 +29,12 @@ env.bak/
 venv.bak/
 
 # IDE
-.vscode/settings.json
+.vscode/
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 *.swp
 *.swo
 *~
