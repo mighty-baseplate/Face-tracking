@@ -16,13 +16,6 @@
 
 ---
 
-## 🚀 Live Demo
-
-*(This is a placeholder. You can replace this with a GIF or video of your project in action.)*
-
-![Live Demo Placeholder](https://i.imgur.com/gJ7eD9b.gif)
-
----
 
 ## 📂 Project Structure
 
