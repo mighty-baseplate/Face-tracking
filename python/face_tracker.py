@@ -5,7 +5,6 @@ import mediapipe as mp
 import argparse
 import sys
 
-# --- Configuration ---
 BAUD_RATE = 9600
 WEBCAM_ID = 0
 FRAME_WIDTH = 1280
@@ -16,23 +15,18 @@ MIN_FACE_WIDTH = 5
 MIN_FACE_HEIGHT = 5
 
 def initialize_arduino(port, baud_rate):
-    """Tries to connect to the Arduino and returns the serial object."""
     try:
         arduino = serial.Serial(port, baud_rate, timeout=1)
         time.sleep(2)
-        print(f"[INFO] Arduino connected on {port}")
+        print(f"Connected to Arduino on {port}")
         return arduino
     except serial.SerialException:
-        print(f"[ERROR] Failed to connect to Arduino on port {port}.")
-        print("Please check the port and try again.")
+        print(f"Could not connect to Arduino on {port}. Check the port and try again.")
         sys.exit(1)
 
 def detect_face(frame, face_detection, face_cascade, frame_w, frame_h):
-    """Detects a face and returns its center coordinates (x, y)."""
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = face_detection.process(frame_rgb)
-    
-    face_center_x, face_center_y = None, None
 
     if results.detections:
         valid_faces = []
@@ -50,26 +44,20 @@ def detect_face(frame, face_detection, face_cascade, frame_w, frame_h):
             y = int(box.ymin * frame_h)
             w = int(box.width * frame_w)
             h = int(box.height * frame_h)
-            face_center_x = x + w // 2
-            face_center_y = y + h // 2
-            return face_center_x, face_center_y, (x, y, w, h)
+            return x + w // 2, y + h // 2, (x, y, w, h)
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(
         gray, scaleFactor=1.05, minNeighbors=3, minSize=(15, 15), maxSize=(300, 300), flags=cv2.CASCADE_SCALE_IMAGE
     )
-    
+
     if len(faces) > 0:
-        largest_face = max(faces, key=lambda f: f[2] * f[3])
-        x, y, w, h = largest_face
-        face_center_x = x + w // 2
-        face_center_y = y + h // 2
-        return face_center_x, face_center_y, (x, y, w, h)
+        x, y, w, h = max(faces, key=lambda f: f[2] * f[3])
+        return x + w // 2, y + h // 2, (x, y, w, h)
 
     return None, None, None
 
 def main(args):
-    """Main function to run the face tracking application."""
     arduino = initialize_arduino(args.port, BAUD_RATE)
     cap = cv2.VideoCapture(WEBCAM_ID)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
@@ -80,7 +68,7 @@ def main(args):
     frame_center_x = frame_w // 2
     frame_center_y = frame_h // 2
 
-    print(f"[INFO] Webcam opened: {frame_w}x{frame_h}")
+    print(f"Webcam opened at {frame_w}x{frame_h}")
 
     mp_face_detection = mp.solutions.face_detection
     face_detection = mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.5)
@@ -115,7 +103,7 @@ def main(args):
             if face_box:
                 x, y, w, h = face_box
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            
+
             curr_time = time.time()
             fps = 1 / (curr_time - prev_time)
             prev_time = curr_time
@@ -128,11 +116,11 @@ def main(args):
     cap.release()
     arduino.close()
     cv2.destroyAllWindows()
-    print("[INFO] Done.")
+    print("Done.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="A real-time face tracking system that controls a pan-tilt servo motor with an Arduino.")
-    parser.add_argument("--port", default="COM7", help="The serial port of the Arduino.")
-    parser.add_argument("--visualize", action="store_true", help="Enable the video feed visualization.")
+    parser = argparse.ArgumentParser(description="Pan-tilt face tracker using MediaPipe and Arduino.")
+    parser.add_argument("--port", default="COM7", help="Serial port the Arduino is on.")
+    parser.add_argument("--visualize", action="store_true", help="Show the video feed while running.")
     args = parser.parse_args()
     main(args)

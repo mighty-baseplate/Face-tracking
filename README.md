@@ -1,81 +1,68 @@
-# Face Tracking Pan-Tilt Camera 🎯
+# Face Tracking Pan-Tilt Camera
 
-**A real-time, pan-tilt face tracking system that uses computer vision to control two servo motors, making a camera follow a face smoothly.**
+A pan-tilt camera mount that follows your face in real time. The Python script uses MediaPipe to detect faces via webcam, then sends serial commands to an Arduino which moves two servo motors to keep you centered in frame.
 
-*Perfect for robotics, automated video calls, security systems, and interactive art projects.*
-
----
-
-## 🌟 Key Features
-
-- **Pan & Tilt Control:** Full 2-axis tracking (left/right and up/down).
-- **Dual Detection Engine:** Uses MediaPipe for high-performance face detection with a Haar Cascade fallback for robustness.
-- **Real-Time Performance:** Low-latency tracking with an FPS counter for performance monitoring.
-- **Command-Line Control:** Easy to run and configure, with options to specify the serial port and enable a visualizer.
-- **Comprehensive Documentation:** Includes a detailed setup guide and wiring diagrams.
+I built this because I kept getting cut off during video calls when I moved around. Figured it was a good excuse to learn some computer vision.
 
 ---
 
+## Hardware you'll need
 
-## 📂 Project Structure
+- Arduino Uno (or Nano)
+- 2x SG90 servo motors
+- Pan-tilt bracket (cheap ones off Amazon work fine)
+- USB webcam (720p or better)
+- Jumper wires
 
+See [docs/wiring_diagram.md](docs/wiring_diagram.md) for how to connect everything.
+
+---
+
+## Setup
+
+**1. Upload the Arduino sketch**
+
+Open `arduino/face_tracker_arduino.ino` in the Arduino IDE, select your board and port, and upload it.
+
+**2. Install Python dependencies**
+
+```bash
+pip install -r requirements.txt
 ```
-Face-tracking/
-├── arduino/                # Arduino source code (.ino)
-├── docs/                   # Documentation files (setup guide, wiring diagram)
-├── python/                 # Main Python script (face_tracker.py)
-├── .gitignore              # Git ignore file
-├── LICENSE                 # Project license
-├── README.md               # This file
-└── requirements.txt        # Python dependencies
+
+**3. Find your Arduino's serial port**
+
+On Windows it'll be something like `COM3`. On Linux/Mac, something like `/dev/ttyACM0`. You can check in the Arduino IDE under Tools > Port.
+
+**4. Run it**
+
+```bash
+python python/face_tracker.py --port YOUR_PORT
 ```
 
----
+Add `--visualize` to see the video feed with the detection overlay:
 
-## 🛠️ Hardware & Software
+```bash
+python python/face_tracker.py --port YOUR_PORT --visualize
+```
 
-*(See the [Setup Guide](docs/setup_guide.md) for a detailed list of requirements.)*
-
----
-
-## ⚡ Quick Start
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/mighty-baseplate/Face-tracking.git
-    cd Face-tracking
-    ```
-
-2.  **Install Python dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Set up the hardware:**
-    *   Connect the servos to the Arduino as shown in the [Wiring Diagram](docs/wiring_diagram.md).
-    *   Upload the `arduino/face_tracker_arduino.ino` sketch to your Arduino.
-
-4.  **Run the tracker:**
-    *   Find your Arduino's serial port (e.g., `COM3` on Windows, `/dev/ttyACM0` on Linux).
-    *   Run the script from the command line:
-        ```bash
-        python python/face_tracker.py --port YOUR_ARDUINO_PORT
-        ```
-    *   To see the video feed with tracking overlays, use the `--visualize` flag:
-        ```bash
-        python python/face_tracker.py --port YOUR_ARDUINO_PORT --visualize
-        ```
-
-5.  **Press `q` to quit.**
+Press `q` to quit.
 
 ---
 
-## 🤝 Contributing
+## How it works
 
-Contributions are welcome! Please feel free to submit a pull request.
+- MediaPipe handles face detection (fast, works well in decent lighting)
+- Falls back to OpenCV's Haar Cascade if MediaPipe doesn't find anything
+- Tracks the largest detected face if multiple are in frame
+- Sends single-character commands over serial (`L`, `R`, `U`, `D`, `C`, `S`) to the Arduino
+- Arduino moves the servos by a fixed step per command — simple but responsive enough
 
 ---
 
-## 📝 License
+## Known issues / TODO
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+- Tracking gets shaky under poor lighting — tweaking `min_detection_confidence` in the script helps
+- The step-based servo control can jitter a bit; a PID loop would smooth it out
+- Default port is `COM7` in the script — change it or always pass `--port`
+- Only tracks one face at a time (picks the largest one)
