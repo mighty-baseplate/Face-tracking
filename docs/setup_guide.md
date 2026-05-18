@@ -1,72 +1,58 @@
-# Setup Guide 📋
+# Setup Guide
 
-## Prerequisites
+## What you need
 
-### Software Requirements
-- **Python 3.7+**
-- **Arduino IDE**
-- **Git** (optional)
-
-### Hardware Requirements
-- Arduino Uno/Nano/Pro Mini
-- 2x SG90 Servo motors (or similar)
+**Hardware:**
+- Arduino Uno or Nano
+- 2x SG90 servo motors
 - Pan-tilt camera bracket
-- USB Webcam (720p+ recommended)
-- USB cable for Arduino
+- USB webcam (720p or better)
 - Jumper wires
 
-## Step 1: Hardware Setup
+**Software:**
+- Python 3.7+
+- Arduino IDE
 
-### 1.1 Assemble Pan-Tilt Bracket
-- Assemble the pan-tilt bracket with the two servo motors.
-- Mount the webcam on the bracket.
+---
 
-### 1.2 Connect Servos to Arduino
-- Follow the [Wiring Diagram](wiring_diagram.md) to connect the servos to the Arduino.
+## Hardware setup
 
-### 1.3 Connect Arduino to Computer
-- Use a USB cable to connect the Arduino to your computer.
+1. Assemble the pan-tilt bracket with both servos and mount the webcam on it.
+2. Wire the servos to the Arduino — see [wiring_diagram.md](wiring_diagram.md).
+3. Plug the Arduino into your computer via USB.
 
-## Step 2: Arduino Software Setup
+---
 
-### 2.1 Install Arduino IDE
-- Download and install the Arduino IDE from the [official website](https://www.arduino.cc/en/software).
+## Arduino setup
 
-### 2.2 Configure Arduino IDE
-- In the Arduino IDE, select your board and port from the **Tools** menu.
+1. Open `arduino/face_tracker_arduino.ino` in the Arduino IDE.
+2. Under **Tools**, select your board and port.
+3. Click **Upload**.
 
-### 2.3 Upload Arduino Code
-- Open the `arduino/face_tracker_arduino.ino` sketch.
-- Click the **Upload** button.
+---
 
-## Step 3: Python Environment Setup
+## Python setup
 
-### 3.1 Install Python
-- If you don't have Python, download and install it from the [official website](https://www.python.org/downloads/).
+```bash
+pip install -r requirements.txt
+```
 
-### 3.2 Install Dependencies
-- Open a terminal or command prompt and run:
-  ```bash
-  pip install -r requirements.txt
-  ```
+---
 
-## Step 4: Running the System
+## Running it
 
-### 4.1 Find Your Arduino's Port
-- You can find the port in the Arduino IDE under **Tools > Port**.
+Find your port in the Arduino IDE under **Tools > Port**, then:
 
-### 4.2 Run the Script
-- Run the following command, replacing `YOUR_ARDUINO_PORT` with your Arduino's serial port:
-  ```bash
-  python python/face_tracker.py --port YOUR_ARDUINO_PORT
-  ```
-- To enable the video feed visualization, add the `--visualize` flag:
-  ```bash
-  python python/face_tracker.py --port YOUR_ARDUINO_PORT --visualize
-  ```
+```bash
+python python/face_tracker.py --port YOUR_PORT
+```
 
-## Step 5: Troubleshooting
+Add `--visualize` if you want to see the camera feed.
 
-- **Servo not moving:** Double-check your wiring and make sure the Arduino is powered.
-- **Camera not found:** Make sure your webcam is connected and try running the script without the `--visualize` flag.
-- **Errors on startup:** Ensure you have installed all the required Python packages.
+---
+
+## Troubleshooting
+
+- **Servos not moving** — check wiring, make sure the Arduino is powered and the sketch uploaded correctly
+- **Can't find webcam** — make sure it's plugged in; try a different `WEBCAM_ID` value in the script if you have multiple cameras
+- **Serial connection error** — double-check the port name; on Linux you may need `sudo` or to add your user to the `dialout` group
