@@ -5,7 +5,6 @@ import mediapipe as mp
 import argparse
 import sys
 
-# --- Configuration ---
 BAUD_RATE = 9600
 WEBCAM_ID = 0
 FRAME_WIDTH = 1280
@@ -16,19 +15,16 @@ MIN_FACE_WIDTH = 5
 MIN_FACE_HEIGHT = 5
 
 def initialize_arduino(port, baud_rate):
-    """Tries to connect to the Arduino and returns the serial object."""
     try:
         arduino = serial.Serial(port, baud_rate, timeout=1)
         time.sleep(2)
-        print(f"[INFO] Arduino connected on {port}")
+        print(f"Connected to Arduino on {port}")
         return arduino
     except serial.SerialException:
-        print(f"[ERROR] Failed to connect to Arduino on port {port}.")
-        print("Please check the port and try again.")
+        print(f"Could not connect to Arduino on {port}. Check the port and try again.")
         sys.exit(1)
 
 def detect_face(frame, face_detection, face_cascade, frame_w, frame_h):
-    """Detects a face and returns its center coordinates (x, y)."""
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = face_detection.process(frame_rgb)
     
@@ -69,7 +65,6 @@ def detect_face(frame, face_detection, face_cascade, frame_w, frame_h):
     return None, None, None
 
 def main(args):
-    """Main function to run the face tracking application."""
     arduino = initialize_arduino(args.port, BAUD_RATE)
     cap = cv2.VideoCapture(WEBCAM_ID)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
@@ -80,7 +75,7 @@ def main(args):
     frame_center_x = frame_w // 2
     frame_center_y = frame_h // 2
 
-    print(f"[INFO] Webcam opened: {frame_w}x{frame_h}")
+    print(f"Webcam opened at {frame_w}x{frame_h}")
 
     mp_face_detection = mp.solutions.face_detection
     face_detection = mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.5)
@@ -128,10 +123,10 @@ def main(args):
     cap.release()
     arduino.close()
     cv2.destroyAllWindows()
-    print("[INFO] Done.")
+    print("Done.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="A real-time face tracking system that controls a pan-tilt servo motor with an Arduino.")
+    parser = argparse.ArgumentParser(description="Pan-tilt face tracker using MediaPipe and Arduino.")
     parser.add_argument("--port", default="COM7", help="The serial port of the Arduino.")
     parser.add_argument("--visualize", action="store_true", help="Enable the video feed visualization.")
     args = parser.parse_args()
